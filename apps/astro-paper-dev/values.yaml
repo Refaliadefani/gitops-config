@@ -82,13 +82,21 @@ env: []
 envFrom: []
 
 externalSecrets:
-  enabled: false
+  enabled: true
   refreshInterval: "1h"
   secretStoreName: "vault-backend"
   secretStoreKind: "ClusterSecretStore"
   target:
-    name: "app-secrets"
-  data: []
+    name: "astro-paper-secrets"
+  data:
+    - secretKey: APP_SECRET
+      remoteRef:
+        key: secret/data/apps/astro-paper
+        property: APP_SECRET
+    - secretKey: API_KEY
+      remoteRef:
+        key: secret/data/apps/astro-paper
+        property: API_KEY
 
 serviceAccount:
   create: true
