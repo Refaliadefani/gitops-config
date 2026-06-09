@@ -5,7 +5,7 @@ replicaCount: 1
 
 image:
   repository: harbor.20.44.216.40.nip.io/devsecops/astro-paper
-  tag: "latest"
+  tag: "9"
   pullPolicy: Always
 
 containerPort: 80
