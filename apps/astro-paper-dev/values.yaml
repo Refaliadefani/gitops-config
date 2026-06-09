@@ -1,0 +1,116 @@
+# ==============================================================================
+# Astro Paper - DEV Environment Values
+# ==============================================================================
+
+app:
+  name: "astro-paper"
+  team: "frontend"
+  version: "1.0.0"
+
+image:
+  repository: "harbor.20.44.216.40.nip.io/devsecops/astro-paper"
+  tag: "latest"
+  pullPolicy: Always
+
+imagePullSecrets: []
+
+replicaCount: 1
+
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
+
+containerPort: 80
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  hosts:
+    - host: "app-dev.20.44.216.40.nip.io"
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources:
+  requests:
+    cpu: "50m"
+    memory: "64Mi"
+  limits:
+    cpu: "200m"
+    memory: "256Mi"
+
+autoscaling:
+  enabled: false
+
+probes:
+  liveness:
+    enabled: true
+    path: /
+    port: 80
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
+  readiness:
+    enabled: true
+    path: /
+    port: 80
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+  startup:
+    enabled: false
+    path: /
+    port: 80
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    failureThreshold: 30
+
+env: []
+
+envFrom: []
+
+externalSecrets:
+  enabled: false
+  refreshInterval: "1h"
+  secretStoreName: "vault-backend"
+  secretStoreKind: "ClusterSecretStore"
+  target:
+    name: "app-secrets"
+  data: []
+
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+
+podSecurityContext:
+  runAsNonRoot: false
+
+securityContext: {}
+
+networkPolicy:
+  enabled: false
+
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+extraLabels: {}
+
+podAnnotations: {}
